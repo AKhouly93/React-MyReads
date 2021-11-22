@@ -5,8 +5,7 @@ import Book from "./Book";
 import * as BooksAPI from './BooksAPI'
 export default function SearchPage(props){  
     const [searchResults, setSearchResults] = useState([]);
-    const booksInApp = useState(props.booksInApp);
-    console.log(booksInApp);
+    const booksInApp = props.booksInApp;
     const [query, setQuery] = useState("");
 
     const searchForBook = (query)=>{        
