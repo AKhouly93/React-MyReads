@@ -23,10 +23,11 @@ export default function SearchPage(props){
             setSearchResults(data);      
         })
     };
+    
     //function for updating query state and validating it.
     const updateQuery = (query) =>{
         setQuery(query);
-        if (query === "")
+        if (query.trim() === "")
         {
             setSearchResults([]);
         }
@@ -34,7 +35,20 @@ export default function SearchPage(props){
             searchForBook(query);
         }
     };
-
+    
+    const onChangeShelf = (book, newShelf)=>{
+        props.onChangeShelf(book, newShelf);
+        setSearchResults(
+            searchResults.map((b)=>{
+                if (b.id === book.id)
+                {
+                    b.shelf = newShelf;
+                }
+                return b;
+            })
+        );
+    }
+    
     return (
         <div className="search-books">
             <div className="search-books-bar">
@@ -45,22 +59,30 @@ export default function SearchPage(props){
 
                 <div className="search-books-input-wrapper">
                     <input
-                    type="text" 
-                    placeholder="Search by title or author"
-                    value = {query}
-                    onChange ={(e)=>{updateQuery(e.target.value)}}
+                        type="text" 
+                        placeholder="Search by title or author"
+                        value = {query}
+                        onChange ={(e)=>{updateQuery(e.target.value)}}
                     />
-
                 </div>
             </div>
             <div className="search-books-results">
-            <ol className="books-grid">
-            {searchResults && searchResults.length > 0 && 
-                            searchResults.map((book)=> <li key={book.id}>
-                            <Book book={book} shelf={book.shelf} onChangeShelf ={props.onChangeShelf} />
-                            </li>)
-            }
-            </ol>
+                <ol className="books-grid">
+                    {searchResults && searchResults.length > 0 && 
+                        searchResults.map((book)=>{
+                            return (
+                                <li 
+                                    key={book.id}>
+                                    <Book 
+                                        book={book}
+                                        shelf={book.shelf}
+                                        onChangeShelf ={onChangeShelf}
+                                    /> 
+                                </li>
+                            )
+                        })
+                    }
+                </ol>
             </div>
         </div>
     );
